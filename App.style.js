@@ -5,5 +5,5 @@ export const s = StyleSheet.create({
   cardItem: { marginBottom: 20 },
   header: { flex: 1 },
   body: { flex: 5 },
-  footer: { height: 70 },
+  footer: { height: 58 },
 });

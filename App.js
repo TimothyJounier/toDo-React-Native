@@ -4,8 +4,10 @@ import { s } from "./App.style";
 import { Header } from "./components/Header/Header";
 import { CardTodo } from "./components/CardTodo/CardTodo";
 import { useState } from "react";
+import { TabBottomMenu } from "./components/TabBottomMenu/TabBottomMenu";
 
 export default function App() {
+  const [selectedTabName, setSelectedTabName] = useState("all");
   const [todoList, setTodoList] = useState([
     { id: 1, title: "Sortir le chien", isCompleted: true },
     { id: 2, title: "Faire un bisou à crapautin", isCompleted: false },
@@ -54,7 +56,12 @@ export default function App() {
           </View>
         </SafeAreaView>
       </SafeAreaProvider>
-      <View style={s.footer}></View>
+      <View style={s.footer}>
+        <TabBottomMenu
+          onPress={setSelectedTabName}
+          selectedTabName={selectedTabName}
+        ></TabBottomMenu>
+      </View>
     </>
   );
 }
