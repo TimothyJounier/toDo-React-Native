@@ -3,11 +3,15 @@ import { Alert, ScrollView, View } from "react-native";
 import { s } from "./App.style";
 import { Header } from "./components/Header/Header";
 import { CardTodo } from "./components/CardTodo/CardTodo";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TabBottomMenu } from "./components/TabBottomMenu/TabBottomMenu";
 import { ButtonAdd } from "./components/ButtonAdd/ButtonAdd";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Dialog from "react-native-dialog";
 import uuid from "react-native-uuid";
+
+let isFirstRender = true;
+let isLoadUpdate = false;
 
 export default function App() {
   const [selectedTabName, setSelectedTabName] = useState("all");
@@ -15,7 +19,46 @@ export default function App() {
   const [isAddDialogVisible, setIsAddDialogVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
+  // Chargement au lancement de l'app
+  useEffect(() => {
+    loadTodoList();
+  }, []);
+
+  useEffect(() => {
+    if (isLoadUpdate) {
+      isLoadUpdate = false;
+    } else {
+      if (!isFirstRender) {
+        saveTodoList();
+      } else {
+        isFirstRender = false;
+      }
+    }
+  }, [todoList]);
+
   /** FUNCTION */
+
+  // save todo list with async storage
+  async function saveTodoList() {
+    try {
+      await AsyncStorage.setItem("@todolist", JSON.stringify(todoList));
+    } catch (err) {
+      alert("Erreur" + err);
+    }
+  }
+
+  async function loadTodoList() {
+    try {
+      const stringfieldTodoList = await AsyncStorage.getItem("@todolist");
+      if (stringfieldTodoList !== null) {
+        const parseTodoList = JSON.parse(stringfieldTodoList);
+        isLoadUpdate = true;
+        setTodoList(parseTodoList);
+      }
+    } catch (err) {
+      alert("Erreur" + err);
+    }
+  }
 
   // filter list
   function getFilterList() {
@@ -76,10 +119,12 @@ export default function App() {
     ));
   }
 
+  // show add dialog
   function showAddDialog() {
     setIsAddDialogVisible(true);
   }
 
+  // add toDo
   function addTodo() {
     const newTodo = {
       id: uuid.v4(),
