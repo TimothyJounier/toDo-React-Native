@@ -66,9 +66,9 @@ export default function App() {
       case "all":
         return todoList;
       case "inProgress":
-        todoList.filter((todo) => !todo.isCompleted);
-      case "inProgress":
-        todoList.filter((todo) => todo.isCompleted);
+        return todoList.filter((todo) => !todo.isCompleted);
+      case "done":
+        return todoList.filter((todo) => todo.isCompleted);
     }
   }
 
