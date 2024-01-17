@@ -21,6 +21,17 @@ export default function App() {
 
   /** FUNCTION */
 
+  function getFilterList() {
+    switch (selectedTabName) {
+      case "all":
+        return todoList;
+      case "inProgress":
+        todoList.filter((todo) => !todo.isCompleted);
+      case "inProgress":
+        todoList.filter((todo) => todo.isCompleted);
+    }
+  }
+
   // update the toDo
   function updateTodo(todo) {
     const updatedTodo = {
@@ -37,7 +48,7 @@ export default function App() {
 
   // render to do list
   function renderTodoList() {
-    return todoList.map((todo) => (
+    return getFilterList().map((todo) => (
       <View style={s.cardItem} key={todo.id}>
         <CardTodo onPress={updateTodo} todo={todo}></CardTodo>
       </View>
@@ -58,6 +69,7 @@ export default function App() {
       </SafeAreaProvider>
       <View style={s.footer}>
         <TabBottomMenu
+          todoList={todoList}
           onPress={setSelectedTabName}
           selectedTabName={selectedTabName}
         ></TabBottomMenu>
